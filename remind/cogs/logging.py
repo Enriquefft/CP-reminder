@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import discord
 
 from discord.ext import commands
 from remind.util import discord_common
@@ -28,6 +29,7 @@ class Logging(commands.Cog, logging.Handler):
         self.logger.log(level=100, msg=stars)
         self.logger.log(level=100, msg=msg)
         self.logger.log(level=100, msg=stars)
+        await self.bot.change_presence(activity=discord.CustomActivity(name='Practice'))
 
     async def _log_task(self):
         while True:
