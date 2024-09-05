@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 pytz = "^2024.1"
 requests = "^2.32.3"
 python-dotenv = "^1.0.1"
@@ -18,6 +18,10 @@ discord-py = "^1"
 poethepoet = "^0.24.4"
 pytest = "^7.4.3"
 pyright = "^1.1.373"
+
+[tool.poe.tasks]
+run = "python -m remind"
+export = "poetry export --without-hashes --format=requirements.txt --all-extras --output requirements.txt"
 
 [tool.ruff.lint]
 select = ["ALL"]

@@ -77,7 +77,7 @@ async def main():
 
     setup()
 
-    intents = discord.Intents.default()
+    intents = discord.Intents.all()
     intents.members = True
     intents.messages = True
 
@@ -85,7 +85,7 @@ async def main():
 
     cogs = [file.stem for file in Path("remind", "cogs").glob("*.py")]
     for extension in cogs:
-        bot.load_extension(f"remind.cogs.{extension}")
+        await bot.load_extension(f"remind.cogs.{extension}")
     logging.info(f'Cogs loaded: {", ".join(bot.cogs)}')
 
     async def no_dm_usage_check(ctx):
