@@ -1,15 +1,15 @@
-import os
 import asyncio
-import discord
 import logging
+import os
 from logging.handlers import TimedRotatingFileHandler
-from remind import constants
+from pathlib import Path
 
+import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from pathlib import Path
-from remind.util import discord_common
-from remind.util import clist_api
+
+from remind import constants
+from remind.util import clist_api, discord_common
 
 
 def setup():
