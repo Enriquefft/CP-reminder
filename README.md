@@ -4,6 +4,8 @@
 
 A discord bot that sends reminders for future contests using [clist](https://clist.by/) API, fully based on [Remind me](https://github.com/prabh1601/Remind-Me).
 
+Installation into your server is free, just make sure to let me know you are using the bot.
+
 ## Installation
 
 > **Use Python 3.7 or later.**
