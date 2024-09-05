@@ -24,14 +24,14 @@ def setup():
         red = "\x1b[31;20m"
         bold_red = "\x1b[31;1m"
         reset = "\x1b[0m"
-        format = "%(asctime)s - %(levelname)s - %(name)s - %(message)s (%(filename)s:%(lineno)d)"
+        format_str = "%(asctime)s - %(levelname)s - %(name)s - %(message)s (%(filename)s:%(lineno)d)"
 
         FORMATS = {
-            logging.DEBUG: cyan + format + reset,
-            logging.INFO: grey + format + reset,
-            logging.WARNING: yellow + format + reset,
-            logging.ERROR: red + format + reset,
-            logging.CRITICAL: bold_red + format + reset
+            logging.DEBUG: cyan + format_str + reset,
+            logging.INFO: grey + format_str + reset,
+            logging.WARNING: yellow + format_str + reset,
+            logging.ERROR: red + format_str + reset,
+            logging.CRITICAL: bold_red + format_str + reset,
         }
 
         def format(self, record):
@@ -40,31 +40,38 @@ def setup():
             return formatter.format(record)
 
     ch = logging.StreamHandler()
+
     ch.setFormatter(CustomFormatter())
     # logging to console and file on daily interval
-    logging.basicConfig(format='{asctime}:{levelname}:{name}:{message}',
-                        style='{',
-                        datefmt='%d-%m-%Y %H:%M:%S',
-                        level=logging.INFO,
-                        handlers=[ch,
-                                  TimedRotatingFileHandler(constants.LOG_FILE_PATH, when='D', backupCount=3, utc=True)])
+    logging.basicConfig(
+        format="{asctime}:{levelname}:{name}:{message}",
+        style="{",
+        datefmt="%d-%m-%Y %H:%M:%S",
+        level=logging.INFO,
+        handlers=[
+            ch,
+            TimedRotatingFileHandler(
+                constants.LOG_FILE_PATH, when="D", backupCount=3, utc=True
+            ),
+        ],
+    )
 
 
 async def main():
     load_dotenv()
 
-    token = os.getenv('BOT_TOKEN_REMIND')
+    token = os.getenv("BOT_TOKEN_REMIND")
     if not token:
-        logging.error('Token required')
+        logging.error("Token required")
         return
 
-    super_users_str = os.getenv('SUPER_USERS')
+    super_users_str = os.getenv("SUPER_USERS")
     if not super_users_str:
-        logging.error('Superusers required')
+        logging.error("Superusers required")
         return
     constants.SUPER_USERS = list(map(int, super_users_str.split(",")))
 
-    remind_moderator_role = os.getenv('REMIND_MODERATOR_ROLE')
+    remind_moderator_role = os.getenv("REMIND_MODERATOR_ROLE")
     if remind_moderator_role:
         constants.REMIND_MODERATOR_ROLE = remind_moderator_role
 
@@ -72,17 +79,18 @@ async def main():
 
     intents = discord.Intents.default()
     intents.members = True
-    intents.message_content = True
-    bot = commands.Bot(command_prefix=commands.when_mentioned_or('t;'), intents=intents)
+    intents.messages = True
 
-    cogs = [file.stem for file in Path('remind', 'cogs').glob('*.py')]
+    bot = commands.Bot(command_prefix=commands.when_mentioned_or("t;"), intents=intents)
+
+    cogs = [file.stem for file in Path("remind", "cogs").glob("*.py")]
     for extension in cogs:
-        await bot.load_extension(f'remind.cogs.{extension}')
+        bot.load_extension(f"remind.cogs.{extension}")
     logging.info(f'Cogs loaded: {", ".join(bot.cogs)}')
 
     async def no_dm_usage_check(ctx):
         if ctx.guild is None:
-            raise commands.NoPrivateMessage('Private messages not permitted.')
+            raise commands.NoPrivateMessage("Private messages not permitted.")
         return True
 
     # Restrict bot usage to inside guild channels only.
@@ -93,9 +101,9 @@ async def main():
         clist_api.cache()
         asyncio.create_task(discord_common.presence(bot))
 
-    bot.add_listener(discord_common.bot_error_handler, name='on_command_error')
+    bot.add_listener(discord_common.bot_error_handler, name="on_command_error")
     await bot.start(token)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())

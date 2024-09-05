@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "cp-reminder"
+version = "0.1.0"
+description = "A Discord bot that sends reminders for future contests using clist, fully based on https://github.com/prabh1601/Remind-Me"
+authors = ["Enriquefft <enriquefft2001@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pytz = "^2024.1"
+requests = "^2.32.3"
+python-dotenv = "^1.0.1"
+recordtype = "^1.4"
+discord-py = "^1"
+
+[tool.poetry.group.dev.dependencies]
+poethepoet = "^0.24.4"
+pytest = "^7.4.3"
+pyright = "^1.1.373"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D203", "D212", "FA", "ANN101", "COM812", "ISC001"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402"]
+"**/{tests,docs,tools}/*" = ["E402", "S101"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.12"
+verboseOutput = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
