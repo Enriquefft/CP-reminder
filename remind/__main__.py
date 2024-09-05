@@ -5,11 +5,27 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
 import discord
+from aiohttp import web
 from discord.ext import commands
 from dotenv import load_dotenv
 
 from remind import constants
 from remind.util import clist_api, discord_common
+
+
+async def health_check(request: web.Request):
+    return web.Response(text="Bot is running!")
+
+
+async def start_health_check_listener():
+    app = web.Application()
+    app.router.add_get("/health", health_check)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.getenv("PORT", 8080))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    logging.info(f"Health check listener started on port {port}")
 
 
 def setup():
@@ -102,6 +118,9 @@ async def main():
         asyncio.create_task(discord_common.presence(bot))
 
     bot.add_listener(discord_common.bot_error_handler, name="on_command_error")
+
+    asyncio.create_task(start_health_check_listener())
+
     await bot.start(token)
 
 
